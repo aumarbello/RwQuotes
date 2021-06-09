@@ -71,7 +71,7 @@ class RWQuoteMigrationTest {
   }
 
   @get:Rule
-  val migrationTestHelper = MigrationTestHelper(
+  val migrationHelper = MigrationTestHelper(
       InstrumentationRegistry.getInstrumentation(),
       RWQuotesDatabase::class.java.canonicalName,
       FrameworkSQLiteOpenHelperFactory()
@@ -80,7 +80,7 @@ class RWQuoteMigrationTest {
 
   @Test
   fun migrate1to2() {
-    database = migrationTestHelper.createDatabase(TEST_DB, 1).apply {
+    database = migrationHelper.createDatabase(TEST_DB, 1).apply {
 
       execSQL(
           """
@@ -90,7 +90,7 @@ class RWQuoteMigrationTest {
       close()
     }
 
-    database = migrationTestHelper.runMigrationsAndValidate(TEST_DB, 2, true, MIGRATION_1_2)
+    database = migrationHelper.runMigrationsAndValidate(TEST_DB, 2, true, MIGRATION_1_2)
 
     val resultCursor = database.query("SELECT * FROM rwquotes")
 
@@ -117,7 +117,7 @@ class RWQuoteMigrationTest {
   @Throws(IOException::class)
   fun migrateAll() {
     // Create earliest version of the database.
-    migrationTestHelper.createDatabase(TEST_DB, 2).apply {
+    migrationHelper.createDatabase(TEST_DB, 2).apply {
       close()
     }
 
